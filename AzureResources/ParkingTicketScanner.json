@@ -9,6 +9,44 @@
     "mailto": {
       "type": "string"
     },
+    "checkFrequency": {
+      "type": "string",
+      "minLength": 1,
+      "allowedValues": [
+        "Month",
+        "Week",
+        "Day",
+        "Hour",
+        "Minute",
+        "Second"
+      ],
+      "defaultValue": "Minute"
+    },
+    "checkInterval": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "Description": {
+      "type": "string",
+      "metadata": {
+        "description": "The string to set in the Description column of the SpreadSheet"
+      },
+      "defaultValue": "TechDays 2017"
+    },
+    "ACN": {
+      "type": "string",
+      "metadata": {
+        "description": "The string to set in the ACN column of the SpreadSheet"
+      },
+      "defaultValue": "4086"
+    },
+    "CUR": {
+      "type": "string",
+      "metadata": {
+        "description": "The string to set in the CUR column of the SpreadSheet"
+      },
+      "defaultValue": "EUR"
+    },
     "repoUrl": {
       "type": "string",
       "defaultValue": "https://github.com/olandese/TechDays2017.git"
@@ -62,6 +100,14 @@
       "type": "string",
       "defaultValue": "Gmail"
     },
+    "outlookConnection_Name": {
+      "type": "string",
+      "defaultValue": "outlook"
+    },
+    "outlookConnection_DisplayName": {
+      "type": "string",
+      "defaultValue": "Outlook"
+    },
     "dropboxFolder": {
       "type": "string",
       "defaultValue": "",
@@ -96,52 +142,6 @@
         "description": "The Google Spreadsheet gid to update"
       },
       "defaultValue": " "
-    },
-    "checkFrequency": {
-      "type": "string",
-      "minLength": 1,
-      "allowedValues": [
-        "Month",
-        "Week",
-        "Day",
-        "Hour",
-        "Minute",
-        "Second"
-      ],
-      "defaultValue": "Minute"
-    },
-    "checkInterval": {
-      "type": "int",
-      "defaultValue": 1
-    },
-    "outlookConnection_Name": {
-      "type": "string",
-      "defaultValue": "outlook"
-    },
-    "outlookConnection_DisplayName": {
-      "type": "string",
-      "defaultValue": "Outlook"
-    },
-    "Description": {
-      "type": "string",
-      "metadata": {
-        "description": "The string to set in the Description column of the SpreadSheet"
-      },
-      "defaultValue": "TechDays 2017"
-    },
-    "ACN": {
-      "type": "string",
-      "metadata": {
-        "description": "The string to set in the ACN column of the SpreadSheet"
-      },
-      "defaultValue": "4086"
-    },
-    "CUR": {
-      "type": "string",
-      "metadata": {
-        "description": "The string to set in the CUR column of the SpreadSheet"
-      },
-      "defaultValue": "EUR"
     }
   },
   "variables": {
