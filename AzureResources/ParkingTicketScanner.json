@@ -6,6 +6,9 @@
       "type": "string",
       "defaultValue": "ParkingTicketScanner"
     },
+    "mailto": {
+      "type": "string"
+    },
     "repoUrl": {
       "type": "string",
       "defaultValue": "https://github.com/olandese/TechDays2017.git"
@@ -109,7 +112,7 @@
     },
     "checkInterval": {
       "type": "int",
-      "defaultValue": 15
+      "defaultValue": 1
     },
     "outlookConnection_Name": {
       "type": "string",
@@ -119,15 +122,34 @@
       "type": "string",
       "defaultValue": "Outlook"
     },
-    "mailto": {
-      "type": "string"
+    "Description": {
+      "type": "string",
+      "metadata": {
+        "description": "The string to set in the Description column of the SpreadSheet"
+      },
+      "defaultValue": "TechDays 2017"
+    },
+    "ACN": {
+      "type": "string",
+      "metadata": {
+        "description": "The string to set in the ACN column of the SpreadSheet"
+      },
+      "defaultValue": "4086"
+    },
+    "CUR": {
+      "type": "string",
+      "metadata": {
+        "description": "The string to set in the CUR column of the SpreadSheet"
+      },
+      "defaultValue": "EUR"
     }
   },
   "variables": {
+    "appName": "[concat(parameters('logicAppName'), uniquestring(resourceGroup().id))]",
     "functionName": "ParkingTicketCognitiveParser",
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
     "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-    "cognitiveservicesid": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', parameters('logicAppName'))]",
+    "cognitiveservicesid": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', variables('appName'))]",
     "singleQuote": "'"
   },
   "resources": [
@@ -143,10 +165,10 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2015-04-01",
-      "name": "[parameters('logicAppName')]",
+      "name": "[variables('appName')]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "name": "[parameters('logicAppName')]",
+        "name": "[variables('appName')]",
         "computeMode": "Dynamic",
         "sku": "Dynamic"
       }
@@ -154,15 +176,15 @@
     {
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/sites",
-      "name": "[parameters('logicAppName')]",
+      "name": "[variables('appName')]",
       "location": "[resourceGroup().location]",
       "kind": "functionapp",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('logicAppName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', variables('appName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ],
       "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('logicAppName'))]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appName'))]",
         "siteConfig": {
           "appSettings": [
             {
@@ -179,7 +201,7 @@
             },
             {
               "name": "WEBSITE_CONTENTSHARE",
-              "value": "[toLower(parameters('logicAppName'))]"
+              "value": "[toLower(variables('appName'))]"
             },
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -198,7 +220,7 @@
           "name": "web",
           "type": "sourcecontrols",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('logicAppName'))]"
+            "[resourceId('Microsoft.Web/Sites', variables('appName'))]"
           ],
           "properties": {
             "RepoUrl": "[parameters('repoURL')]",
@@ -266,9 +288,9 @@
                         "path": "[concat('/datasets/@{encodeURIComponent(', variables('singleQuote'), parameters('googleSpreadSheetId'),variables('singleQuote'), ')}/tables/@{encodeURIComponent(',variables('singleQuote'), parameters('googleSpreadSheetGid') ,variables('singleQuote'),')}/items')]",
                         "body": {
                           "Date": "@{body('ParkingTicketCognitiveParser').Date}",
-                          "Description": "Parkeren Rabobank",
-                          "ACN": "4086",
-                          "CUR": "EUR",
+                          "Description": "[parameters('Description')]",
+                          "ACN": "[parameters('ACN')]",
+                          "CUR": "[parameters('CUR')]",
                           "Amount": "@{body('ParkingTicketCognitiveParser').Amount}"
                         }
                       },
@@ -367,7 +389,7 @@
                   "content-type": "application/json"
                 },
                 "function": {
-                  "id": "[resourceId('Microsoft.Web/sites/functions', parameters('logicAppName'), variables('functionName'))]"
+                  "id": "[resourceId('Microsoft.Web/sites/functions', variables('appName'), variables('functionName'))]"
                 }
               },
               "runAfter": {
@@ -443,12 +465,12 @@
           }
         }
       },
-      "name": "[parameters('logicAppName')]",
+      "name": "[variables('appName')]",
       "type": "Microsoft.Logic/workflows",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-06-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('logicAppName'), 'web')]",
+        "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('appName'), 'web')]",
         "[resourceId('Microsoft.Web/connections', parameters('outlookConnection_Name'))]",
         "[resourceId('Microsoft.Web/connections', parameters('googlesheetConnection_Name'))]",
         "[resourceId('Microsoft.Web/connections', parameters('gmailConnection_Name'))]",
@@ -498,7 +520,7 @@
         "name": "S1"
       },
       "kind": "ComputerVision",
-      "name": "[parameters('logicAppName')]",
+      "name": "[variables('appName')]",
       "apiVersion": "2016-02-01-preview",
       "location": "[resourceGroup().location]",
       "scale": null,
@@ -521,7 +543,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('logicAppName'))]"
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('appName'))]"
       ]
     },
     {
