@@ -5,21 +5,6 @@
     "logicAppName": {
       "value": "ParkingTicketScannerComplete"
     },
-    "dropboxFolder": {
-      "value": "/techdays2017"
-    },
-    "dropBoxFolderId": {
-      "value": "-p8Wzg2dCokAAAAAAAAApQ"
-    },
-    "googleSpreadSheet": {
-      "value": "/Expense_Report"
-    },
-    "googleSpreadSheetId": {
-      "value": "19A5pIlb18zAN7OcFxTZ0dV4v3veoW1n1dSZbeo2zuj8"
-    },
-    "googleSpreadSheetGid": {
-      "value": "270490625"
-    },
     "checkFrequency": {
       "value": "Second"
     },
@@ -27,7 +12,7 @@
       "value": 15
     },
     "mailto": {
-      "value": "test@mansi.nl"
+      "value": "test@yourmail.com"
     }
   }
 }

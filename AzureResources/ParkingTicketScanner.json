@@ -61,6 +61,7 @@
     },
     "dropboxFolder": {
       "type": "string",
+      "defaultValue": " ",
       "metadata": {
         "description": "The dropbox folder to watch"
       }
@@ -70,10 +71,11 @@
       "metadata": {
         "description": "The dropbox ID folder to watch"
       },
-      "defaultValue": "-p8Wzg2dCokAAAAAAAAAfg"
+      "defaultValue": " "
     },
     "googleSpreadSheet": {
       "type": "string",
+      "defaultValue": " ",
       "metadata": {
         "description": "The Google Spreadsheet to update"
       }
@@ -83,14 +85,14 @@
       "metadata": {
         "description": "The Google Spreadsheet ID to update"
       },
-      "defaultValue": "1e-RynT_I1gy6SYLoWZxez8MJBhvYsS4MVko7rCx_FRs"
+      "defaultValue": " "
     },
     "googleSpreadSheetGid": {
       "type": "string",
       "metadata": {
         "description": "The Google Spreadsheet gid to update"
       },
-      "defaultValue": "406996176"
+      "defaultValue": " "
     },
     "checkFrequency": {
       "type": "string",
