@@ -1,0 +1,547 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logicAppName": {
+      "type": "string",
+      "defaultValue": "ParkingTicketScanner"
+    },
+    "appName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the function app that you wish to create."
+      },
+      "defaultValue": "ParkingTicketScanner"
+    },
+    "repoUrl": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string",
+      "defaultValue": "master"
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_ZRS",
+        "Premium_LRS"
+      ],
+      "metadata": {
+        "description": "Storage Account type"
+      }
+    },
+    "dropbox_1_Connection_Name": {
+      "type": "string",
+      "defaultValue": "dropbox"
+    },
+    "dropbox_1_Connection_DisplayName": {
+      "type": "string",
+      "defaultValue": "DropBox"
+    },
+    "googlesheet_1_Connection_Name": {
+      "type": "string",
+      "defaultValue": "googlesheet"
+    },
+    "googlesheet_1_Connection_DisplayName": {
+      "type": "string",
+      "defaultValue": "Google Sheet"
+    },
+    "cognitiveservicescomputervision_1_Connection_Name": {
+      "type": "string",
+      "defaultValue": "cognitiveservicescomputervision"
+    },
+    "cognitiveservicescomputervision_1_Connection_DisplayName": {
+      "type": "string",
+      "defaultValue": "CognitiveServices"
+    },
+    "gmail_1_Connection_Name": {
+      "type": "string",
+      "defaultValue": "gmail"
+    },
+    "gmail_1_Connection_DisplayName": {
+      "type": "string",
+      "defaultValue": "Gmail"
+    },
+    "dropboxFolder": {
+      "type": "string",
+      "metadata": {
+        "description": "The dropbox folder to watch"
+      }
+    },
+    "dropBoxFolderId": {
+      "type": "string",
+      "metadata": {
+        "description": "The dropbox ID folder to watch"
+      },
+      "defaultValue": "-p8Wzg2dCokAAAAAAAAAfg"
+    },
+    "googleSpreadSheet": {
+      "type": "string",
+      "metadata": {
+        "description": "The Google Spreadsheet to update"
+      }
+    },
+    "googleSpreadSheetId": {
+      "type": "string",
+      "metadata": {
+        "description": "The Google Spreadsheet ID to update"
+      },
+      "defaultValue": "1e-RynT_I1gy6SYLoWZxez8MJBhvYsS4MVko7rCx_FRs"
+    },
+    "googleSpreadSheetGid": {
+      "type": "string",
+      "metadata": {
+        "description": "The Google Spreadsheet gid to update"
+      },
+      "defaultValue": "406996176"
+    },
+    "checkFrequency": {
+      "type": "string",
+      "minLength": 1,
+      "allowedValues": [
+        "Month",
+        "Week",
+        "Day",
+        "Hour",
+        "Minute",
+        "Second"
+      ],
+      "defaultValue": "Minute"
+    },
+    "checkInterval": {
+      "type": "int",
+      "defaultValue": 15
+    },
+    "outlook_1_Connection_Name": {
+      "type": "string",
+      "defaultValue": "outlook"
+    },
+    "outlook_1_Connection_DisplayName": {
+      "type": "string",
+      "defaultValue": "Outlook"
+    },
+    "mailto": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "functionAppName": "[parameters('appName')]",
+    "functionName": "ParkingTicketCognitiveParser",
+    "hostingPlanName": "[parameters('appName')]",
+    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
+    "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+    "cognitiveservicesid": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', parameters('logicAppName'))]",
+    "singleQuote": "'"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "accountType": "[parameters('storageAccountType')]"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2015-04-01",
+      "name": "[variables('hostingPlanName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "name": "[variables('hostingPlanName')]",
+        "computeMode": "Dynamic",
+        "sku": "Dynamic"
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "type": "Microsoft.Web/sites",
+      "name": "[variables('functionAppName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "functionapp",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "AzureWebJobsDashboard",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "[toLower(variables('functionAppName'))]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "beta"
+            },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "6.5.0"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('functionAppName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoURL')]",
+            "branch": "[parameters('branch')]",
+            "IsManualIntegration": true
+          }
+        }
+      ]
+    },
+    {
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "actions": {
+            "IsResponseStatusCode200": {
+              "type": "If",
+              "expression": "@equals(outputs('ParkingTicketCognitiveParser')['statusCode'], 200)",
+              "actions": {
+                "Send_approval_email": {
+                  "type": "ApiConnectionWebhook",
+                  "inputs": {
+                    "host": {
+                      "connection": {
+                        "name": "@parameters('$connections')['outlook']['connectionId']"
+                      }
+                    },
+                    "path": "/approvalmail/$subscriptions",
+                    "body": {
+                      "NotificationUrl": "@{listCallbackUrl()}",
+                      "Message": {
+                        "To": "[parameters('mailto')]",
+                        "Subject": "Approval Request",
+                        "Options": "Approve, Reject",
+                        "Body": "A parking ticket has been scanned on @{body('Parse_JSON')?['Date']} with an amount of @{body('Parse_JSON')?['Amount']}€",
+                        "Importance": "Normal",
+                        "Attachments": [
+                          {
+                            "Name": "@triggerOutputs()['headers']['x-ms-file-name']",
+                            "ContentBytes": "@{base64(triggerBody())}"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Parse_JSON": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "IsApproved": {
+                  "type": "If",
+                  "expression": "@equals(body('Send_approval_email')?['SelectedOption'], 'Approve')",
+                  "actions": {
+                    "Insert_row": {
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['googlesheet']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "[concat('/datasets/@{encodeURIComponent(', variables('singleQuote'), parameters('googleSpreadSheetId'),variables('singleQuote'), ')}/tables/@{encodeURIComponent(',variables('singleQuote'), parameters('googleSpreadSheetGid') ,variables('singleQuote'),')}/items')]",
+                        "body": {
+                          "Date": "@{body('ParkingTicketCognitiveParser').Date}",
+                          "Description": "Parkeren Rabobank",
+                          "ACN": "4086",
+                          "CUR": "EUR",
+                          "Amount": "@{body('ParkingTicketCognitiveParser').Amount}"
+                        }
+                      },
+                      "runAfter": {},
+                      "metadata": {
+                        "[parameters('googleSpreadSheetId')]": "[parameters('googleSpreadSheet')]"
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Send_approval_email": [
+                      "Succeeded"
+                    ]
+                  }
+                },
+                "Parse_JSON": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@body('ParkingTicketCognitiveParser')",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "Amount": {
+                          "type": "string"
+                        },
+                        "Date": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runAfter": {
+                "ParkingTicketCognitiveParser": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "Send_email": {
+                    "type": "ApiConnection",
+                    "inputs": {
+                      "host": {
+                        "connection": {
+                          "name": "@parameters('$connections')['gmail']['connectionId']"
+                        }
+                      },
+                      "method": "post",
+                      "path": "/Mail",
+                      "body": {
+                        "To": "[parameters('mailto')]",
+                        "Subject": "Rabobank Ticket Parsing Error",
+                        "Body": "@{body('ParkingTicketCognitiveParser')}",
+                        "Attachments": [
+                          {
+                            "Name": "@triggerOutputs()['headers']['x-ms-file-name']",
+                            "ContentBytes": "@{base64(triggerBody())}",
+                            "ContentType": "@triggerOutputs()['headers']['Content-Type']"
+                          }
+                        ]
+                      }
+                    },
+                    "runAfter": {}
+                  }
+                }
+              }
+            },
+            "Optical_Character_Recognition_(OCR)_to_JSON": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['cognitiveservicescomputervision']['connectionId']"
+                  }
+                },
+                "method": "post",
+                "path": "/vision/v1.0/ocr",
+                "queries": {
+                  "language": "unk",
+                  "detectOrientation": true,
+                  "format": "Image Content"
+                },
+                "body": "@triggerBody()"
+              },
+              "runAfter": {}
+            },
+            "ParkingTicketCognitiveParser": {
+              "type": "Function",
+              "inputs": {
+                "body": "@body('Optical_Character_Recognition_(OCR)_to_JSON')",
+                "method": "POST",
+                "headers": {
+                  "content-type": "application/json"
+                },
+                "function": {
+                  "id": "[resourceId('Microsoft.Web/sites/functions', variables('functionAppName'), variables('functionName'))]"
+                }
+              },
+              "runAfter": {
+                "Optical_Character_Recognition_(OCR)_to_JSON": [
+                  "Succeeded"
+                ]
+              }
+            }
+          },
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "When_a_file_is_created": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['dropbox']['connectionId']"
+                  }
+                },
+                "method": "get",
+                "path": "/datasets/default/triggers/onnewfile",
+                "queries": {
+                  "folderId": "[concat('id:', parameters('dropBoxFolderId'))]",
+                  "inferContentType": true
+                }
+              },
+              "recurrence": {
+                "frequency": "[parameters('checkFrequency')]",
+                "interval": "[parameters('checkInterval')]"
+              },
+              "metadata": {
+                "[concat('id:', parameters('dropBoxFolderId'))]": "[parameters('dropboxFolder')]"
+              }
+            }
+          },
+          "contentVersion": "1.0.0.0",
+          "outputs": {}
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "outlook": {
+                "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'outlook')]",
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('outlook_1_Connection_Name'))]",
+                "connectionName": "[parameters('outlook_1_Connection_Name')]"
+              },
+              "googlesheet": {
+                "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'googlesheet')]",
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('googlesheet_1_Connection_Name'))]",
+                "connectionName": "[parameters('googlesheet_1_Connection_Name')]"
+              },
+              "gmail": {
+                "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'gmail')]",
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('gmail_1_Connection_Name'))]",
+                "connectionName": "[parameters('gmail_1_Connection_Name')]"
+              },
+              "cognitiveservicescomputervision": {
+                "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'cognitiveservicescomputervision')]",
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('cognitiveservicescomputervision_1_Connection_Name'))]",
+                "connectionName": "[parameters('cognitiveservicescomputervision_1_Connection_Name')]"
+              },
+              "dropbox": {
+                "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'dropbox')]",
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('dropbox_1_Connection_Name'))]",
+                "connectionName": "[parameters('dropbox_1_Connection_Name')]"
+              }
+            }
+          }
+        }
+      },
+      "name": "[parameters('logicAppName')]",
+      "type": "Microsoft.Logic/workflows",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('functionAppName'), 'web')]",
+        "[resourceId('Microsoft.Web/connections', parameters('outlook_1_Connection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('googlesheet_1_Connection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('gmail_1_Connection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('cognitiveservicescomputervision_1_Connection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('dropbox_1_Connection_Name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('dropbox_1_Connection_Name')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'dropbox')]"
+        },
+        "displayName": "[parameters('dropbox_1_Connection_DisplayName')]"
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('googlesheet_1_Connection_Name')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'googlesheet')]"
+        },
+        "displayName": "[parameters('googlesheet_1_Connection_DisplayName')]"
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('gmail_1_Connection_Name')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'gmail')]"
+        },
+        "displayName": "[parameters('gmail_1_Connection_DisplayName')]"
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "sku": {
+        "name": "S1"
+      },
+      "kind": "ComputerVision",
+      "name": "[parameters('logicAppName')]",
+      "apiVersion": "2016-02-01-preview",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {},
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('cognitiveservicescomputervision_1_Connection_Name')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'cognitiveservicescomputervision')]"
+        },
+        "displayName": "[parameters('cognitiveservicescomputervision_1_Connection_DisplayName')]",
+        "parameterValues": {
+          "siteUrl": "[reference(variables('cognitiveservicesid'), '2016-02-01-preview').endpoint]",
+          "apiKey": "[listKeys(variables('cognitiveservicesid'),'2016-02-01-preview').key1]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('logicAppName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('outlook_1_Connection_Name')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'outlook')]"
+        },
+        "displayName": "[parameters('outlook_1_Connection_DisplayName')]"
+      }
+    }
+  ],
+  "outputs": {}
+}

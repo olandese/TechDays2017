@@ -1,0 +1,361 @@
+{
+    "language": "nl",
+    "textAngle": 0,
+    "orientation": "Up",
+    "regions": [
+        {
+            "boundingBox": "64,13,1261,963",
+            "lines": [
+                {
+                    "boundingBox": "475,13,440,62",
+                    "words": [
+                        {
+                            "boundingBox": "475,13,440,62",
+                            "text": "Jaarbeurs"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "271,85,801,76",
+                    "words": [
+                        {
+                            "boundingBox": "271,85,699,76",
+                            "text": "Jaarbeursplein"
+                        },
+                        {
+                            "boundingBox": "1036,91,36,54",
+                            "text": "6"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "218,158,904,72",
+                    "words": [
+                        {
+                            "boundingBox": "218,168,91,62",
+                            "text": "NL"
+                        },
+                        {
+                            "boundingBox": "323,166,242,58",
+                            "text": "-3521"
+                        },
+                        {
+                            "boundingBox": "624,161,94,60",
+                            "text": "AL"
+                        },
+                        {
+                            "boundingBox": "780,158,342,64",
+                            "text": "Utrecht"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "67,235,1208,70",
+                    "words": [
+                        {
+                            "boundingBox": "67,246,78,59",
+                            "text": "B."
+                        },
+                        {
+                            "boundingBox": "163,241,186,62",
+                            "text": "T.W."
+                        },
+                        {
+                            "boundingBox": "425,254,89,45",
+                            "text": "nr"
+                        },
+                        {
+                            "boundingBox": "576,235,92,62",
+                            "text": "NL"
+                        },
+                        {
+                            "boundingBox": "682,235,593,60",
+                            "text": "807501554801"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "70,386,1255,67",
+                    "words": [
+                        {
+                            "boundingBox": "70,394,84,59",
+                            "text": "P3"
+                        },
+                        {
+                            "boundingBox": "224,392,82,56",
+                            "text": "35"
+                        },
+                        {
+                            "boundingBox": "373,386,194,60",
+                            "text": "Uitr"
+                        },
+                        {
+                            "boundingBox": "629,386,393,58",
+                            "text": "07-09-17"
+                        },
+                        {
+                            "boundingBox": "1089,386,236,58",
+                            "text": "17:29"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "68,460,805,68",
+                    "words": [
+                        {
+                            "boundingBox": "68,464,126,64",
+                            "text": "Kwi"
+                        },
+                        {
+                            "boundingBox": "220,475,37,48",
+                            "text": "t"
+                        },
+                        {
+                            "boundingBox": "271,460,242,63",
+                            "text": "antie"
+                        },
+                        {
+                            "boundingBox": "578,460,295,59",
+                            "text": "000794"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "68,609,600,80",
+                    "words": [
+                        {
+                            "boundingBox": "68,609,600,80",
+                            "text": "Kortparkeren"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "65,683,501,69",
+                    "words": [
+                        {
+                            "boundingBox": "65,683,501,69",
+                            "text": "Mastercard"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "69,758,804,76",
+                    "words": [
+                        {
+                            "boundingBox": "69,762,650,72",
+                            "text": "Parkeergarage"
+                        },
+                        {
+                            "boundingBox": "789,758,84,61",
+                            "text": "P3"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "65,836,708,65",
+                    "words": [
+                        {
+                            "boundingBox": "65,842,243,59",
+                            "text": "07-09"
+                        },
+                        {
+                            "boundingBox": "376,839,86,59",
+                            "text": "17"
+                        },
+                        {
+                            "boundingBox": "528,836,245,59",
+                            "text": "09:24"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "64,912,707,64",
+                    "words": [
+                        {
+                            "boundingBox": "64,915,398,61",
+                            "text": "07-09-17"
+                        },
+                        {
+                            "boundingBox": "530,912,241,58",
+                            "text": "17:29"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "58,983,975,1051",
+            "lines": [
+                {
+                    "boundingBox": "63,983,542,71",
+                    "words": [
+                        {
+                            "boundingBox": "63,994,195,60",
+                            "text": "Duur"
+                        },
+                        {
+                            "boundingBox": "324,983,281,65",
+                            "text": "1d0hO'"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "73,1063,227,71",
+                    "words": [
+                        {
+                            "boundingBox": "73,1063,227,71",
+                            "text": "(BTW)"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "58,1211,614,68",
+                    "words": [
+                        {
+                            "boundingBox": "58,1212,292,67",
+                            "text": "Totaal"
+                        },
+                        {
+                            "boundingBox": "427,1211,245,63",
+                            "text": "bruto"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "65,1363,398,76",
+                    "words": [
+                        {
+                            "boundingBox": "65,1363,398,76",
+                            "text": "Betaling"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "63,1445,95,62",
+                    "words": [
+                        {
+                            "boundingBox": "63,1445,95,62",
+                            "text": "MC"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "65,1516,502,73",
+                    "words": [
+                        {
+                            "boundingBox": "65,1516,502,73",
+                            "text": "07/09/2017"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "63,1590,865,69",
+                    "words": [
+                        {
+                            "boundingBox": "63,1590,865,69",
+                            "text": "AANS:455665312663"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "63,1668,659,67",
+                    "words": [
+                        {
+                            "boundingBox": "63,1668,659,67",
+                            "text": "T-ID:PX027807"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "67,1739,966,72",
+                    "words": [
+                        {
+                            "boundingBox": "67,1745,503,66",
+                            "text": "AUT:000823"
+                        },
+                        {
+                            "boundingBox": "636,1741,130,63",
+                            "text": "ST:"
+                        },
+                        {
+                            "boundingBox": "795,1739,238,63",
+                            "text": "57976"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "70,1895,606,65",
+                    "words": [
+                        {
+                            "boundingBox": "70,1895,289,65",
+                            "text": "Totaal"
+                        },
+                        {
+                            "boundingBox": "434,1904,242,52",
+                            "text": "netto"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "80,1972,143,62",
+                    "words": [
+                        {
+                            "boundingBox": "80,1972,143,62",
+                            "text": "BTW"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "1038,1057,302,970",
+            "lines": [
+                {
+                    "boundingBox": "1038,1057,298,67",
+                    "words": [
+                        {
+                            "boundingBox": "1038,1057,298,67",
+                            "text": "€16,00"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "1039,1206,299,69",
+                    "words": [
+                        {
+                            "boundingBox": "1039,1206,299,69",
+                            "text": "€16,00"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "1040,1433,300,70",
+                    "words": [
+                        {
+                            "boundingBox": "1040,1433,300,70",
+                            "text": "€16,00"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "1039,1885,292,69",
+                    "words": [
+                        {
+                            "boundingBox": "1039,1885,292,69",
+                            "text": "€13,22"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "1089,1959,246,68",
+                    "words": [
+                        {
+                            "boundingBox": "1089,1959,246,68",
+                            "text": "€2,78"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
