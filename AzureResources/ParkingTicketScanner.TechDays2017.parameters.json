@@ -2,19 +2,8 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    //Unique within a Resource Group
     "logicAppName": {
       "value": "ParkingTicketScannerComplete"
-    },
-    //Globally Unique
-    "appName": {
-      "value": "ParkingTicketScannerComplete"
-    },
-    "repoUrl": {
-      "value": "https://github.com/olandese/TechDays2017.git"
-    },
-    "branch": {
-      "value": "master"
     },
     "dropboxFolder": {
       "value": "/techdays2017"
@@ -23,7 +12,7 @@
       "value": "-p8Wzg2dCokAAAAAAAAApQ"
     },
     "googleSpreadSheet": {
-      "value": "/Expense_Report_Xpirit"
+      "value": "/Expense_Report"
     },
     "googleSpreadSheetId": {
       "value": "19A5pIlb18zAN7OcFxTZ0dV4v3veoW1n1dSZbeo2zuj8"
