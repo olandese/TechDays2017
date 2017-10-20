@@ -33,35 +33,35 @@
         "description": "Storage Account type"
       }
     },
-    "dropbox_1_Connection_Name": {
+    "dropboxConnection_Name": {
       "type": "string",
       "defaultValue": "dropbox"
     },
-    "dropbox_1_Connection_DisplayName": {
+    "dropboxConnection_DisplayName": {
       "type": "string",
       "defaultValue": "DropBox"
     },
-    "googlesheet_1_Connection_Name": {
+    "googlesheetConnection_Name": {
       "type": "string",
       "defaultValue": "googlesheet"
     },
-    "googlesheet_1_Connection_DisplayName": {
+    "googlesheetConnection_DisplayName": {
       "type": "string",
       "defaultValue": "Google Sheet"
     },
-    "cognitiveservicescomputervision_1_Connection_Name": {
+    "cognitiveservicescomputervisionConnection_Name": {
       "type": "string",
       "defaultValue": "cognitiveservicescomputervision"
     },
-    "cognitiveservicescomputervision_1_Connection_DisplayName": {
+    "cognitiveservicescomputervisionConnection_DisplayName": {
       "type": "string",
       "defaultValue": "CognitiveServices"
     },
-    "gmail_1_Connection_Name": {
+    "gmailConnection_Name": {
       "type": "string",
       "defaultValue": "gmail"
     },
-    "gmail_1_Connection_DisplayName": {
+    "gmailConnection_DisplayName": {
       "type": "string",
       "defaultValue": "Gmail"
     },
@@ -115,11 +115,11 @@
       "type": "int",
       "defaultValue": 15
     },
-    "outlook_1_Connection_Name": {
+    "outlookConnection_Name": {
       "type": "string",
       "defaultValue": "outlook"
     },
-    "outlook_1_Connection_DisplayName": {
+    "outlookConnection_DisplayName": {
       "type": "string",
       "defaultValue": "Outlook"
     },
@@ -422,28 +422,28 @@
             "value": {
               "outlook": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'outlook')]",
-                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('outlook_1_Connection_Name'))]",
-                "connectionName": "[parameters('outlook_1_Connection_Name')]"
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('outlookConnection_Name'))]",
+                "connectionName": "[parameters('outlookConnection_Name')]"
               },
               "googlesheet": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'googlesheet')]",
-                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('googlesheet_1_Connection_Name'))]",
-                "connectionName": "[parameters('googlesheet_1_Connection_Name')]"
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('googlesheetConnection_Name'))]",
+                "connectionName": "[parameters('googlesheetConnection_Name')]"
               },
               "gmail": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'gmail')]",
-                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('gmail_1_Connection_Name'))]",
-                "connectionName": "[parameters('gmail_1_Connection_Name')]"
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('gmailConnection_Name'))]",
+                "connectionName": "[parameters('gmailConnection_Name')]"
               },
               "cognitiveservicescomputervision": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'cognitiveservicescomputervision')]",
-                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('cognitiveservicescomputervision_1_Connection_Name'))]",
-                "connectionName": "[parameters('cognitiveservicescomputervision_1_Connection_Name')]"
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('cognitiveservicescomputervisionConnection_Name'))]",
+                "connectionName": "[parameters('cognitiveservicescomputervisionConnection_Name')]"
               },
               "dropbox": {
                 "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'dropbox')]",
-                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('dropbox_1_Connection_Name'))]",
-                "connectionName": "[parameters('dropbox_1_Connection_Name')]"
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('dropboxConnection_Name'))]",
+                "connectionName": "[parameters('dropboxConnection_Name')]"
               }
             }
           }
@@ -455,47 +455,47 @@
       "apiVersion": "2016-06-01",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('functionAppName'), 'web')]",
-        "[resourceId('Microsoft.Web/connections', parameters('outlook_1_Connection_Name'))]",
-        "[resourceId('Microsoft.Web/connections', parameters('googlesheet_1_Connection_Name'))]",
-        "[resourceId('Microsoft.Web/connections', parameters('gmail_1_Connection_Name'))]",
-        "[resourceId('Microsoft.Web/connections', parameters('cognitiveservicescomputervision_1_Connection_Name'))]",
-        "[resourceId('Microsoft.Web/connections', parameters('dropbox_1_Connection_Name'))]"
+        "[resourceId('Microsoft.Web/connections', parameters('outlookConnection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('googlesheetConnection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('gmailConnection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('cognitiveservicescomputervisionConnection_Name'))]",
+        "[resourceId('Microsoft.Web/connections', parameters('dropboxConnection_Name'))]"
       ]
     },
     {
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
-      "name": "[parameters('dropbox_1_Connection_Name')]",
+      "name": "[parameters('dropboxConnection_Name')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "api": {
           "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'dropbox')]"
         },
-        "displayName": "[parameters('dropbox_1_Connection_DisplayName')]"
+        "displayName": "[parameters('dropboxConnection_DisplayName')]"
       }
     },
     {
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
-      "name": "[parameters('googlesheet_1_Connection_Name')]",
+      "name": "[parameters('googlesheetConnection_Name')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "api": {
           "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'googlesheet')]"
         },
-        "displayName": "[parameters('googlesheet_1_Connection_DisplayName')]"
+        "displayName": "[parameters('googlesheetConnection_DisplayName')]"
       }
     },
     {
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
-      "name": "[parameters('gmail_1_Connection_Name')]",
+      "name": "[parameters('gmailConnection_Name')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "api": {
           "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'gmail')]"
         },
-        "displayName": "[parameters('gmail_1_Connection_DisplayName')]"
+        "displayName": "[parameters('gmailConnection_DisplayName')]"
       }
     },
     {
@@ -514,13 +514,13 @@
     {
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
-      "name": "[parameters('cognitiveservicescomputervision_1_Connection_Name')]",
+      "name": "[parameters('cognitiveservicescomputervisionConnection_Name')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "api": {
           "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'cognitiveservicescomputervision')]"
         },
-        "displayName": "[parameters('cognitiveservicescomputervision_1_Connection_DisplayName')]",
+        "displayName": "[parameters('cognitiveservicescomputervisionConnection_DisplayName')]",
         "parameterValues": {
           "siteUrl": "[reference(variables('cognitiveservicesid'), '2016-02-01-preview').endpoint]",
           "apiKey": "[listKeys(variables('cognitiveservicesid'),'2016-02-01-preview').key1]"
@@ -533,13 +533,13 @@
     {
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
-      "name": "[parameters('outlook_1_Connection_Name')]",
+      "name": "[parameters('outlookConnection_Name')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "api": {
           "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'outlook')]"
         },
-        "displayName": "[parameters('outlook_1_Connection_DisplayName')]"
+        "displayName": "[parameters('outlookConnection_DisplayName')]"
       }
     }
   ],
