@@ -153,161 +153,159 @@
         "definition": {
           "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
           "actions": {
-            "IsResponseStatusCode200": {
-              "type": "If",
-              "expression": "@equals(outputs('ParkingTicketCognitiveParser')['statusCode'], 200)",
+            "Scope": {
+              "type": "Scope",
               "actions": {
-                "Send_approval_email": {
-                  "type": "ApiConnectionWebhook",
+                "Optical_Character_Recognition_(OCR)_to_JSON": {
+                  "type": "ApiConnection",
                   "inputs": {
                     "host": {
                       "connection": {
-                        "name": "@parameters('$connections')['outlook']['connectionId']"
+                        "name": "@parameters('$connections')['cognitiveservicescomputervision']['connectionId']"
                       }
                     },
-                    "path": "/approvalmail/$subscriptions",
-                    "body": {
-                      "NotificationUrl": "@{listCallbackUrl()}",
-                      "Message": {
-                        "To": "[parameters('mailto')]",
-                        "Subject": "Approval Request",
-                        "Options": "Approve, Reject",
-                        "Body": "A parking ticket has been scanned on @{body('Parse_JSON')?['Date']} with an amount of @{body('Parse_JSON')?['Amount']}€",
-                        "Importance": "Normal",
-                        "Attachments": [
-                          {
-                            "Name": "@triggerOutputs()['headers']['x-ms-file-name']",
-                            "ContentBytes": "@{base64(triggerBody())}"
-                          }
-                        ]
-                      }
-                    }
+                    "method": "post",
+                    "path": "/vision/v1.0/ocr",
+                    "queries": {
+                      "language": "unk",
+                      "detectOrientation": true,
+                      "format": "Image Content"
+                    },
+                    "body": "@triggerBody()"
                   },
-                  "runAfter": {
-                    "Parse_JSON": [
-                      "Succeeded"
-                    ]
-                  }
+                  "runAfter": {}
                 },
-                "IsApproved": {
-                  "type": "If",
-                  "expression": "@equals(body('Send_approval_email')?['SelectedOption'], 'Approve')",
-                  "actions": {
-                    "Insert_row": {
-                      "type": "ApiConnection",
-                      "inputs": {
-                        "host": {
-                          "connection": {
-                            "name": "@parameters('$connections')['googlesheet']['connectionId']"
-                          }
-                        },
-                        "method": "post",
-                        "path": "/datasets//tables//items",
-                        "body": {
-                          "Date": "@{body('ParkingTicketCognitiveParser').Date}",
-                          "Description": "[variables('Description')]",
-                          "ACN": "[variables('ACN')]",
-                          "CUR": "[variables('CUR')]",
-                          "Amount": "@{body('ParkingTicketCognitiveParser').Amount}"
-                        }
-                      },
-                      "runAfter": {}
-                    }
-                  },
-                  "runAfter": {
-                    "Send_approval_email": [
-                      "Succeeded"
-                    ]
-                  }
-                },
-                "Parse_JSON": {
-                  "type": "ParseJson",
+                "ParkingTicketCognitiveParser": {
+                  "type": "Function",
                   "inputs": {
-                    "content": "@body('ParkingTicketCognitiveParser')",
-                    "schema": {
-                      "type": "object",
-                      "properties": {
-                        "Amount": {
-                          "type": "string"
-                        },
-                        "Date": {
-                          "type": "string"
-                        }
+                    "body": "@body('Optical_Character_Recognition_(OCR)_to_JSON')",
+                    "method": "POST",
+                    "headers": {
+                      "content-type": "application/json"
+                    },
+                    "function": {
+                      "id": "[resourceId('Microsoft.Web/sites/functions', variables('appName'), variables('functionName'))]"
+                    }
+                  },
+                  "runAfter": {
+                    "Optical_Character_Recognition_(OCR)_to_JSON": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "runAfter": {}
+            },
+            "Send_email": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['gmail']['connectionId']"
+                  }
+                },
+                "method": "post",
+                "path": "/Mail",
+                "body": {
+                  "To": "[parameters('mailto')]",
+                  "Subject": "Rabobank Ticket Parsing Error",
+                  "Body": "@{body('ParkingTicketCognitiveParser')}",
+                  "Attachments": [
+                    {
+                      "Name": "@triggerOutputs()['headers']['x-ms-file-name']",
+                      "ContentBytes": "@{base64(triggerBody())}",
+                      "ContentType": "@triggerOutputs()['headers']['Content-Type']"
+                    }
+                  ]
+                }
+              },
+              "runAfter": {
+                "Scope": [
+                  "Failed"
+                ]
+              }
+            },
+            "Parse_JSON": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@body('ParkingTicketCognitiveParser')",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Amount": {
+                      "type": "string"
+                    },
+                    "Date": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Scope": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Send_approval_email": {
+              "type": "ApiConnectionWebhook",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['outlook']['connectionId']"
+                  }
+                },
+                "path": "/approvalmail/$subscriptions",
+                "body": {
+                  "NotificationUrl": "@{listCallbackUrl()}",
+                  "Message": {
+                    "To": "[parameters('mailto')]",
+                    "Subject": "Approval Request",
+                    "Options": "Approve, Reject",
+                    "Body": "A parking ticket has been scanned on @{body('Parse_JSON')?['Date']} with an amount of @{body('Parse_JSON')?['Amount']}€",
+                    "Importance": "Normal",
+                    "Attachments": [
+                      {
+                        "Name": "@triggerOutputs()['headers']['x-ms-file-name']",
+                        "ContentBytes": "@{base64(triggerBody())}"
                       }
+                    ]
+                  }
+                }
+              },
+              "runAfter": {
+                "Parse_JSON": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "IsApproved": {
+              "type": "If",
+              "expression": "@equals(body('Send_approval_email')?['SelectedOption'], 'Approve')",
+              "actions": {
+                "Insert_row": {
+                  "type": "ApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connection": {
+                        "name": "@parameters('$connections')['googlesheet']['connectionId']"
+                      }
+                    },
+                    "method": "post",
+                    "path": "/datasets//tables//items",
+                    "body": {
+                      "Date": "@{body('ParkingTicketCognitiveParser').Date}",
+                      "Description": "[variables('Description')]",
+                      "ACN": "[variables('ACN')]",
+                      "CUR": "[variables('CUR')]",
+                      "Amount": "@{body('ParkingTicketCognitiveParser').Amount}"
                     }
                   },
                   "runAfter": {}
                 }
               },
               "runAfter": {
-                "ParkingTicketCognitiveParser": [
-                  "Succeeded",
-                  "Failed"
-                ]
-              },
-              "else": {
-                "actions": {
-                  "Send_email": {
-                    "type": "ApiConnection",
-                    "inputs": {
-                      "host": {
-                        "connection": {
-                          "name": "@parameters('$connections')['gmail']['connectionId']"
-                        }
-                      },
-                      "method": "post",
-                      "path": "/Mail",
-                      "body": {
-                        "To": "[parameters('mailto')]",
-                        "Subject": "Rabobank Ticket Parsing Error",
-                        "Body": "@{body('ParkingTicketCognitiveParser')}",
-                        "Attachments": [
-                          {
-                            "Name": "@triggerOutputs()['headers']['x-ms-file-name']",
-                            "ContentBytes": "@{base64(triggerBody())}",
-                            "ContentType": "@triggerOutputs()['headers']['Content-Type']"
-                          }
-                        ]
-                      }
-                    },
-                    "runAfter": {}
-                  }
-                }
-              }
-            },
-            "Optical_Character_Recognition_(OCR)_to_JSON": {
-              "type": "ApiConnection",
-              "inputs": {
-                "host": {
-                  "connection": {
-                    "name": "@parameters('$connections')['cognitiveservicescomputervision']['connectionId']"
-                  }
-                },
-                "method": "post",
-                "path": "/vision/v1.0/ocr",
-                "queries": {
-                  "language": "unk",
-                  "detectOrientation": true,
-                  "format": "Image Content"
-                },
-                "body": "@triggerBody()"
-              },
-              "runAfter": {}
-            },
-            "ParkingTicketCognitiveParser": {
-              "type": "Function",
-              "inputs": {
-                "body": "@body('Optical_Character_Recognition_(OCR)_to_JSON')",
-                "method": "POST",
-                "headers": {
-                  "content-type": "application/json"
-                },
-                "function": {
-                  "id": "[resourceId('Microsoft.Web/sites/functions', variables('appName'), variables('functionName'))]"
-                }
-              },
-              "runAfter": {
-                "Optical_Character_Recognition_(OCR)_to_JSON": [
+                "Send_approval_email": [
                   "Succeeded"
                 ]
               }
