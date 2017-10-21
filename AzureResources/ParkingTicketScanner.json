@@ -207,7 +207,7 @@
                           }
                         },
                         "method": "post",
-                        "path": "[concat('/datasets/@{encodeURIComponent(', variables('singleQuote'), variables('googleSpreadSheetId'),variables('singleQuote'), ')}/tables/@{encodeURIComponent(',variables('singleQuote'), variables('googleSpreadSheetGid') ,variables('singleQuote'),')}/items')]",
+                        "path": "/datasets//tables//items",
                         "body": {
                           "Date": "@{body('ParkingTicketCognitiveParser').Date}",
                           "Description": "[variables('Description')]",
@@ -216,10 +216,7 @@
                           "Amount": "@{body('ParkingTicketCognitiveParser').Amount}"
                         }
                       },
-                      "runAfter": {},
-                      "metadata": {
-                        "[variables('googleSpreadSheetId')]": "[variables('googleSpreadSheet')]"
-                      }
+                      "runAfter": {}
                     }
                   },
                   "runAfter": {
@@ -339,16 +336,13 @@
                 "method": "get",
                 "path": "/datasets/default/triggers/onnewfile",
                 "queries": {
-                  "folderId": "[concat('id:', variables('dropBoxFolderId'))]",
+                  "folderId": "",
                   "inferContentType": true
                 }
               },
               "recurrence": {
                 "frequency": "[parameters('checkFrequency')]",
                 "interval": "[parameters('checkInterval')]"
-              },
-              "metadata": {
-                "[concat('id:', variables('dropBoxFolderId'))]": "[variables('dropboxFolder')]"
               }
             }
           },
