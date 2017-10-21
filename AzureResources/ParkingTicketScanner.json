@@ -67,12 +67,7 @@
     "gmailConnection_Name": "gmail",
     "gmailConnection_DisplayName": "Gmail",
     "outlookConnection_Name": "outlook",
-    "outlookConnection_DisplayName": "Outlook",
-    "dropboxFolder": "",
-    "dropBoxFolderId": "",
-    "googleSpreadSheet": "",
-    "googleSpreadSheetId": "",
-    "googleSpreadSheetGid": ""
+    "outlookConnection_DisplayName": "Outlook"
   },
   "resources": [
     {
