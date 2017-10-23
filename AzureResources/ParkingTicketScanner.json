@@ -49,15 +49,14 @@
     }
   },
   "variables": {
-    "appName": "[concat(parameters('logicAppName'), uniquestring(resourceGroup().id))]",
+    "appNameUnique": "[concat(parameters('logicAppName'), uniquestring(resourceGroup().id))]",
     "functionName": "ParkingTicketCognitiveParser",
     "storageAccountName": "[concat('parktickscn', uniquestring(resourceGroup().id))]",
     "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-    "cognitiveservicesid": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', variables('appName'))]",
+    "cognitiveservicesid": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', parameters('logicAppName'))]",
     "Description": "TechDays 2017",
     "ACN": "4086",
     "CUR": "EUR",
-    "singleQuote": "'",
     "dropboxConnection_Name": "dropbox",
     "dropboxConnection_DisplayName": "DropBox",
     "googlesheetConnection_Name": "googlesheet",
@@ -67,7 +66,8 @@
     "gmailConnection_Name": "gmail",
     "gmailConnection_DisplayName": "Gmail",
     "outlookConnection_Name": "outlook",
-    "outlookConnection_DisplayName": "Outlook"
+    "outlookConnection_DisplayName": "Outlook",
+    "singleQuote": "'"
   },
   "resources": [
     {
@@ -82,10 +82,10 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2015-04-01",
-      "name": "[variables('appName')]",
+      "name": "[variables('appNameUnique')]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "name": "[variables('appName')]",
+        "name": "[variables('appNameUnique')]",
         "computeMode": "Dynamic",
         "sku": "Dynamic"
       }
@@ -93,15 +93,15 @@
     {
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/sites",
-      "name": "[variables('appName')]",
+      "name": "[variables('appNameUnique')]",
       "location": "[resourceGroup().location]",
       "kind": "functionapp",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('appName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', variables('appNameUnique'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ],
       "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appName'))]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appNameUnique'))]",
         "siteConfig": {
           "appSettings": [
             {
@@ -118,7 +118,7 @@
             },
             {
               "name": "WEBSITE_CONTENTSHARE",
-              "value": "[toLower(variables('appName'))]"
+              "value": "[toLower(variables('appNameUnique'))]"
             },
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -137,7 +137,7 @@
           "name": "web",
           "type": "sourcecontrols",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', variables('appName'))]"
+            "[resourceId('Microsoft.Web/Sites', variables('appNameUnique'))]"
           ],
           "properties": {
             "RepoUrl": "[parameters('repoURL')]",
@@ -184,7 +184,7 @@
                       "content-type": "application/json"
                     },
                     "function": {
-                      "id": "[resourceId('Microsoft.Web/sites/functions', variables('appName'), variables('functionName'))]"
+                      "id": "[resourceId('Microsoft.Web/sites/functions', variables('appNameUnique'), variables('functionName'))]"
                     }
                   },
                   "runAfter": {
@@ -379,7 +379,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-06-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('appName'), 'web')]",
+        "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('appNameUnique'), 'web')]",
         "[resourceId('Microsoft.Web/connections', variables('outlookConnection_Name'))]",
         "[resourceId('Microsoft.Web/connections', variables('googlesheetConnection_Name'))]",
         "[resourceId('Microsoft.Web/connections', variables('gmailConnection_Name'))]",
@@ -429,7 +429,7 @@
         "name": "S1"
       },
       "kind": "ComputerVision",
-      "name": "[variables('appName')]",
+      "name": "[parameters('logicAppName')]",
       "apiVersion": "2016-02-01-preview",
       "location": "[resourceGroup().location]",
       "scale": null,
@@ -452,7 +452,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.CognitiveServices/accounts', variables('appName'))]"
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('logicAppName'))]"
       ]
     },
     {
