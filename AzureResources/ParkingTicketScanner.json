@@ -20,7 +20,7 @@
         "Minute",
         "Second"
       ],
-      "defaultValue": "Minute"
+      "defaultValue": "Hour"
     },
     "checkInterval": {
       "type": "int",
@@ -374,7 +374,7 @@
           }
         }
       },
-      "name": "[variables('appName')]",
+      "name": "[parameters('logicAppName')]",
       "type": "Microsoft.Logic/workflows",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-06-01",

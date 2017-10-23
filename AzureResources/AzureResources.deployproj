@@ -32,9 +32,9 @@
     <Content Include="ParkingTicketScanner.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="ParkingTicketScanner.TechDays2017.parameters.json">
+    <Content Include="ParkingTicketScanner.TechDays2017.parameters.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
