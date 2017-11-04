@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "AzureResources", "AzureResources\AzureResources.deployproj", "{7E8E8ADE-8951-48EC-AE18-222B5D974E91}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkingTicketCognitiveParser", "ParkingTicketCognitiveParser\ParkingTicketCognitiveParser.csproj", "{AE3F9BB2-C978-4E8A-A46F-42267D6BC2D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{0DD944A8-2F7E-47CC-A909-5367CF80A115}"
+	ProjectSection(SolutionItems) = preProject
+		Expense_Report.xlsx = Expense_Report.xlsx
+		ParkingTicket.jpg = ParkingTicket.jpg
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
