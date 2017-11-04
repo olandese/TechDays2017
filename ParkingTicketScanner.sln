@@ -9,8 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkingTicketCognitiveParse
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{0DD944A8-2F7E-47CC-A909-5367CF80A115}"
 	ProjectSection(SolutionItems) = preProject
-		Expense_Report.xlsx = Expense_Report.xlsx
-		ParkingTicket.jpg = ParkingTicket.jpg
+		Demo\Expense_Report.xlsx = Demo\Expense_Report.xlsx
+		Demo\ParkingTicket.jpg = Demo\ParkingTicket.jpg
 	EndProjectSection
 EndProject
 Global
